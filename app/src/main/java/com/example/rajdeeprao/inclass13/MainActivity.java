@@ -20,6 +20,8 @@ import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     CustomAdapter mAdapter;
     String SortBy, Show;
     Realm realm;
+    RealmResults<Note> notesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
 
         final EditText editText= (EditText) findViewById(R.id.editText);
+        realm.init(this);
         realm = Realm.getDefaultInstance();
 
 
@@ -55,23 +59,32 @@ public class MainActivity extends AppCompatActivity {
                 String note=editText.getText().toString();
                 String priority=spinner.getSelectedItem().toString();
                 String time=new Date().toString();
-                realm.beginTransaction();
-                //Note n =new Note(note,"PENDING",priority,time);
-                Note noteObj= realm.createObject(Note.class); // Create a new object
+                Note noteObj=new Note();
                 noteObj.setNote(note);
+                noteObj.set_id(01);
                 noteObj.setStatus("PENDING");
                 noteObj.setPriority(priority);
                 noteObj.setUpdate_time(time);
+                realm.beginTransaction();
+                //Note n =new Note(note,"PENDING",priority,time);
+                Note noteObjRealm= realm.copyToRealm(noteObj); // Create a new object
                 realm.commitTransaction();
+
                 Log.d("OBJ:",noteObj.toString()+" Created");
+
+                RealmResults<Note> list=realm.where(Note.class).findAll();
+                Log.d("Values:",list.toString());
+
                 //noteArrayList.add(n);
+                notesList=realm.where(Note.class).findAll();
                 //updateListView();
 
             }
         });
 
-//        noteArrayList = (ArrayList<Note>) dm.getAll();
-//        updateListView();
+//      noteArrayList = (ArrayList<Note>) dm.getAll();
+        notesList=realm.where(Note.class).findAll();
+//      updateListView();
 
     }
 

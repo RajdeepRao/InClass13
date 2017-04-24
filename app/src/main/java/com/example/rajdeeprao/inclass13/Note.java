@@ -16,7 +16,7 @@ public class Note extends RealmObject {
     String note,status,priority;
 
     @PrimaryKey
-    long _id;
+    int _id;
 
     @Override
     public String toString() {
@@ -40,11 +40,11 @@ public class Note extends RealmObject {
         this.update_time = update_time;
     }
 
-    public long get_id() {
+    public int get_id() {
         return _id;
     }
 
-    public void set_id(long _id) {
+    public void set_id(int _id) {
         this._id = _id;
     }
 
